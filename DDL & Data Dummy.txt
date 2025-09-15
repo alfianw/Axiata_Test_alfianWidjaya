@@ -1,0 +1,95 @@
+Jalankan Query ini sesuai urutan
+
+-- 1. Buat Database
+CREATE DATABASE alfian_widjaya;
+USE alfian_widjaya;
+
+-- 2. Table Users
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(500),
+    last_name VARCHAR(500),
+    email VARCHAR(255) UNIQUE,
+    phone VARCHAR(50),
+    created_by VARCHAR(255),
+    updated_by VARCHAR(255),
+    created_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_datetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 3. Table Items
+CREATE TABLE items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(500),
+    description VARCHAR(500),
+    price INT,
+    cost INT,
+    created_by VARCHAR(255),
+    updated_by VARCHAR(255),
+    created_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_datetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_items_created_by FOREIGN KEY (created_by) REFERENCES users(email),
+    CONSTRAINT fk_items_updated_by FOREIGN KEY (updated_by) REFERENCES users(email)
+);
+
+-- 4. Table PO Header (po_h)
+CREATE TABLE po_h (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    datetime DATETIME NOT NULL,
+    description VARCHAR(500),
+    total_price INT,
+    total_cost INT,
+    created_by VARCHAR(255),
+    updated_by VARCHAR(255),
+    created_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_datetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_poh_created_by FOREIGN KEY (created_by) REFERENCES users(email),
+    CONSTRAINT fk_poh_updated_by FOREIGN KEY (updated_by) REFERENCES users(email)
+);
+
+-- 5. Table PO Detail (po_d) – sesuai PDF
+CREATE TABLE po_d (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    poh_id INT,
+    item_id INT,
+    item_qty INT,
+    item_cost INT,
+    item_price INT,
+    FOREIGN KEY (poh_id) REFERENCES po_h(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+);
+
+
+-- Dummy Data (5 records per table)
+
+-- Users
+INSERT INTO users (first_name, last_name, email, phone, created_by, updated_by) VALUES
+('Alfian', 'Widjaya', 'alfian@example.com', '08123456789', NULL, NULL),
+('Budi',   'Santoso', 'budi@example.com',   '08123456780', 'alfian@example.com', 'alfian@example.com'),
+('Citra',  'Lestari', 'citra@example.com',  '08123456781', 'alfian@example.com', 'budi@example.com'),
+('Dewi',   'Kusuma',  'dewi@example.com',   '08123456782', 'budi@example.com',   'citra@example.com'),
+('Eka',    'Pratama', 'eka@example.com',    '08123456783', 'citra@example.com',  'dewi@example.com');
+
+-- Items
+INSERT INTO items (name, description, price, cost, created_by, updated_by) VALUES
+('Laptop',   'Laptop Gaming',             15000000, 12000000, 'alfian@example.com', 'budi@example.com'),
+('Mouse',    'Mouse Wireless',              200000,   150000, 'alfian@example.com', 'budi@example.com'),
+('Keyboard', 'Mechanical Keyboard',         800000,   600000, 'budi@example.com',   'citra@example.com'),
+('Monitor',  '24 Inch Full HD Monitor',    2500000,  2000000, 'citra@example.com',  'dewi@example.com'),
+('Headset',  'Gaming Headset',              500000,   350000, 'dewi@example.com',   'eka@example.com');
+
+-- PO Header
+INSERT INTO po_h (datetime, description, total_price, total_cost, created_by, updated_by) VALUES
+('2025-09-15 10:00:00', 'First Order',  15200000, 12150000, 'alfian@example.com', 'budi@example.com'),
+('2025-09-16 11:00:00', 'Second Order', 2600000,  2150000,  'budi@example.com',   'citra@example.com'),
+('2025-09-17 12:00:00', 'Third Order',   800000,   600000,  'citra@example.com',  'dewi@example.com'),
+('2025-09-18 13:00:00', 'Fourth Order',15500000, 12350000,  'dewi@example.com',   'eka@example.com'),
+('2025-09-19 14:00:00', 'Fifth Order',  3000000,  2350000,  'eka@example.com',    'alfian@example.com');
+
+-- PO Detail
+INSERT INTO po_d (poh_id, item_id, item_qty, item_cost, item_price) VALUES
+(1, 1, 1, 12000000, 15000000), -- Laptop in PO 1
+(1, 2, 2,   150000,   200000), -- Mouse in PO 1
+(2, 4, 1,  2000000,  2500000), -- Monitor in PO 2
+(3, 3, 1,   600000,   800000), -- Keyboard in PO 3
+(5, 5, 2,   350000,   500000); -- Headset in PO 5
