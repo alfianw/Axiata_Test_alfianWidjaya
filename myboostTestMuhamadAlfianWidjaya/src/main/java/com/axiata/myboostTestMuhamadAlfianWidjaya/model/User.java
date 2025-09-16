@@ -45,6 +45,9 @@ public class User {
 
     private String phone;
 
+    @Column(name = "password", length = 255) 
+    private String password;
+
     @Column(name = "created_by")
     private String createdBy;
 

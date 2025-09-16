@@ -4,7 +4,10 @@
  */
 package com.axiata.myboostTestMuhamadAlfianWidjaya.service.user;
 
+import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.RequestLogin;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseApi;
+import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseLogin;
+import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseUser;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.model.User;
 import java.util.List;
 
@@ -14,13 +17,15 @@ import java.util.List;
  */
 public interface UserService {
 
-    ResponseApi<List<User>> getAllUsers();
+    ResponseApi<List<ResponseUser>> getAllUsers();
 
-    ResponseApi<User> getUserById(Integer id);
+    ResponseApi<ResponseUser> getUserById(Integer id);
 
-    ResponseApi<User> createUser(User user);
+    ResponseApi<ResponseUser> createUser(User user);
 
-    ResponseApi<User> updateUser(Integer id, User user);
+    ResponseApi<ResponseUser> updateUser(Integer id, User user, String currentUserEmail);
 
-    ResponseApi<User> deleteUser(Integer id);
+    ResponseApi<ResponseUser> deleteUser(Integer id);
+    
+    ResponseApi<ResponseLogin> login(RequestLogin request);
 }

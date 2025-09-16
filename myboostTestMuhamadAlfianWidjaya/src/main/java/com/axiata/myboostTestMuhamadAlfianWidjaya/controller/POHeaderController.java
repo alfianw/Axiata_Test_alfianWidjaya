@@ -10,6 +10,7 @@ import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponsePOHeader;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.service.POHeader.POHeaderService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +56,13 @@ public class POHeaderController {
 
     // DELETE PO Header
     @DeleteMapping("/{id}")
-    public ResponseApi<String> deletePO(@PathVariable Integer id) {
+    public ResponseApi<Void> deletePO(@PathVariable Integer id) {
         return poHeaderService.deletePO(id);
+    }
+
+    @DeleteMapping("/detail/{id}")
+    public ResponseEntity<ResponseApi<Void>> deletePODetail(@PathVariable("id") Integer detailId) {
+        ResponseApi<Void> response = poHeaderService.deletePODetail(detailId);
+        return ResponseEntity.ok(response);
     }
 }

@@ -23,5 +23,7 @@ public interface POHeaderService {
 
     ResponseApi<ResponsePOHeader> updatePO(Integer id, RequestPOHeader request);
 
-    ResponseApi<String> deletePO(Integer id);
+    ResponseApi<Void> deletePO(Integer id);
+    
+    ResponseApi<Void> deletePODetail(Integer detailId);
 }

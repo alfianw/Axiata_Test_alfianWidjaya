@@ -1,17 +1,20 @@
 Jalankan Query ini sesuai urutan
 
 -- 1. Buat Database
+
 CREATE DATABASE alfian_widjaya;
 USE alfian_widjaya;
 
 Masuk ke data base lalu creat table berikut
 -- 2. Table Users
+
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(500),
     last_name VARCHAR(500),
     email VARCHAR(255) UNIQUE,
     phone VARCHAR(50),
+    password VARCHAR(255),
     created_by VARCHAR(255),
     updated_by VARCHAR(255),
     created_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -19,6 +22,7 @@ CREATE TABLE users (
 );
 
 -- 3. Table Items
+
 CREATE TABLE items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(500),
@@ -33,6 +37,7 @@ CREATE TABLE items (
 );
 
 -- 4. Table PO Header (po_h)
+
 CREATE TABLE po_h (
     id INT AUTO_INCREMENT PRIMARY KEY,
     datetime DATETIME NOT NULL,
@@ -46,7 +51,8 @@ CREATE TABLE po_h (
     CONSTRAINT fk_poh_created_by FOREIGN KEY (created_by) REFERENCES users(email)
 );
 
--- 5. Table PO Detail (po_d) – sesuai PDF
+-- 5. Table PO Detail (po_d)
+
 CREATE TABLE po_d (
     id INT AUTO_INCREMENT PRIMARY KEY,
     poh_id INT,
@@ -62,12 +68,12 @@ CREATE TABLE po_d (
 -- Dummy Data (5 records per table)
 
 -- Users
-INSERT INTO users (first_name, last_name, email, phone, created_by, updated_by) VALUES
-('Alfian', 'Widjaya', 'alfian@example.com', '08123456789', 'alfian@example.com', 'alfian@example.com'),
-('Budi',   'Santoso', 'budi@example.com',   '08123456780', 'alfian@example.com', 'alfian@example.com'),
-('Citra',  'Lestari', 'citra@example.com',  '08123456781', 'alfian@example.com', 'budi@example.com'),
-('Dewi',   'Kusuma',  'dewi@example.com',   '08123456782', 'budi@example.com',   'citra@example.com'),
-('Eka',    'Pratama', 'eka@example.com',    '08123456783', 'citra@example.com',  'dewi@example.com');
+INSERT INTO users (first_name, last_name, email, phone, password, created_by, updated_by) VALUES
+('Alfian', 'Widjaya', 'alfian@example.com', '08123456789', '12345', 'alfian@example.com', 'alfian@example.com'),
+('Budi',   'Santoso', 'budi@example.com',   '08123456780', '12345', 'alfian@example.com', 'alfian@example.com'),
+('Citra',  'Lestari', 'citra@example.com',  '08123456781', '12345', 'alfian@example.com', 'budi@example.com'),
+('Dewi',   'Kusuma',  'dewi@example.com',   '08123456782', '12345', 'budi@example.com',   'citra@example.com'),
+('Eka',    'Pratama', 'eka@example.com',    '08123456783', '12345', 'citra@example.com',  'dewi@example.com');
 
 -- Items
 INSERT INTO items (name, description, price, cost, created_by, updated_by) VALUES

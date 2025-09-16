@@ -5,6 +5,7 @@
 package com.axiata.myboostTestMuhamadAlfianWidjaya.repository;
 
 import com.axiata.myboostTestMuhamadAlfianWidjaya.model.PODetail;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,5 +15,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface PODetailRepository extends JpaRepository<PODetail, Integer> {
 
-    Optional<PODetail> findByPoHeaderId(Integer poHeaderId);
+    List<PODetail> findByPoHeaderId(Integer poHeaderId);
 }

@@ -181,10 +181,24 @@ public class POHeaderImpl implements POHeaderService {
     }
 
     @Override
-    public ResponseApi<String> deletePO(Integer id) {
+    public ResponseApi<Void> deletePO(Integer id) {
         POHeader poHeader = poHeaderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("PO with id " + id + " not found"));
         poHeaderRepository.delete(poHeader);
         return new ResponseApi<>("00", "PO Deleted Successfully", null);
+    }
+
+    @Override
+    public ResponseApi<Void> deletePODetail(Integer detailId) {
+        // Cari PO Detail berdasarkan id
+        PODetail poDetail = poDetailRepository.findById(detailId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                "PO Detail with id " + detailId + " not found"));
+
+        // Hapus PO Detail
+        poDetailRepository.delete(poDetail);
+
+        // Response sukses
+        return new ResponseApi<>("00", "PO Detail Deleted Successfully", null);
     }
 }
