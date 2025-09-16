@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UserController {
     
-        private final UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -58,7 +58,7 @@ public class UserController {
 
     // DELETE user by id
     @DeleteMapping("/{id}")
-    public ResponseApi<Void> deleteUser(@PathVariable Integer id) {
+    public ResponseApi<User> deleteUser(@PathVariable Integer id) {
         return userService.deleteUser(id);
     }
 }

@@ -22,5 +22,5 @@ public interface UserService {
 
     ResponseApi<User> updateUser(Integer id, User user);
 
-    ResponseApi<Void> deleteUser(Integer id);
+    ResponseApi<User> deleteUser(Integer id);
 }

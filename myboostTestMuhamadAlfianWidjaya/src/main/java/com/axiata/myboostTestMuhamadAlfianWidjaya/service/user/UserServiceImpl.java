@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseApi<User> createUser(User user) {
+        user.setCreatedBy(user.getEmail());
         User savedUser = userRepository.save(user);
         return new ResponseApi<>("00", "User created successfully", savedUser);
     }
@@ -61,10 +62,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseApi<Void> deleteUser(Integer id) {
+    public ResponseApi<User> deleteUser(Integer id) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
         userRepository.delete(existingUser);
-        return new ResponseApi<>("00", "User deleted successfully", null);
+        return new ResponseApi<>("00", "User deleted successfully", existingUser);
     }
 }
