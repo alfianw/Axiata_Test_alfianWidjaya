@@ -129,6 +129,11 @@ public class POHeaderImpl implements POHeaderService {
         }
         poHeader.setDescription(request.getDescription());
         poHeader.setCreatedBy(currentUserEmail);
+        int totalCost = (poHeader.getTotalCost() != null ? poHeader.getTotalCost() : 0) + request.getItemCost();
+        poHeader.setTotalCost(totalCost);
+
+        int totalPrice = (poHeader.getTotalPrice() != null ? poHeader.getTotalPrice() : 0) + request.getItemPrice();
+        poHeader.setTotalPrice(totalPrice);
 
         POHeader savedHeader = poHeaderRepository.save(poHeader);
 
@@ -152,7 +157,7 @@ public class POHeaderImpl implements POHeaderService {
     public ResponseApi<ResponsePOHeader> updatePO(Integer id, RequestPOHeader request, String currentUserEmail) {
         POHeader poHeader = poHeaderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("PO with id " + id + " not found"));
-        
+
         if (request.getDescription().isBlank()) {
             throw new MandatoryFieldException("Description cannot be null");
         }
