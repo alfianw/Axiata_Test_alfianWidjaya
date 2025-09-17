@@ -9,15 +9,14 @@ import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.RequestLogin;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseApi;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseLogin;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseUser;
+import com.axiata.myboostTestMuhamadAlfianWidjaya.exception.MandatoryFieldException;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.exception.ResourceNotFoundException;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.model.User;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.repository.UserRepository;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,8 +58,23 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("Email is already registered: " + user.getEmail());
         }
-        user.setCreatedBy(user.getEmail());
+        if (user.getFirstName().isBlank()) {
+            throw new MandatoryFieldException("FirstName cannot be null");
+        }
+        if (user.getLastName().isBlank()) {
+            throw new MandatoryFieldException("LastName cannot be null");
+        }
+        if (user.getEmail().isBlank()) {
+            throw new MandatoryFieldException("Email cannot be null");
+        }
+        if (user.getPhone().isBlank()) {
+            throw new MandatoryFieldException("Phone cannot be null");
+        }
+        if (user.getPassword().isBlank()) {
+            throw new MandatoryFieldException("Password cannot be null");
+        }
 
+        user.setCreatedBy(user.getEmail());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User savedUser = userRepository.save(user);
@@ -72,12 +86,19 @@ public class UserServiceImpl implements UserService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
 
+        if (user.getFirstName().isBlank()) {
+            throw new MandatoryFieldException("FirstName cannot be null");
+        }
+        if (user.getLastName().isBlank()) {
+            throw new MandatoryFieldException("LastName cannot be null");
+        }
+        if (user.getPhone().isBlank()) {
+            throw new MandatoryFieldException("Phone cannot be null");
+        }
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
         existingUser.setPhone(user.getPhone());
         existingUser.setUpdatedBy(currentUserEmail);
-        System.out.println("DEBUG principal.getName() = " + currentUserEmail);
-
         User updatedUser = userRepository.save(existingUser);
         return new ResponseApi<>("00", "User updated successfully", convertToResponseUser(updatedUser));
     }
@@ -86,12 +107,14 @@ public class UserServiceImpl implements UserService {
     public ResponseApi<ResponseUser> deleteUser(Integer id) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
+
         userRepository.delete(existingUser);
         return new ResponseApi<>("00", "User deleted successfully", convertToResponseUser(existingUser));
     }
 
     @Override
     public ResponseApi<ResponseLogin> login(RequestLogin request) {
+
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email " + request.getEmail()));
 

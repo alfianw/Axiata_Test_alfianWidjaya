@@ -8,6 +8,7 @@ import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.RequestPOHeader;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseApi;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponsePODetail;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponsePOHeader;
+import com.axiata.myboostTestMuhamadAlfianWidjaya.exception.MandatoryFieldException;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.exception.ResourceNotFoundException;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.model.Item;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.model.PODetail;
@@ -109,11 +110,25 @@ public class POHeaderImpl implements POHeaderService {
     }
 
     @Override
-    public ResponseApi<ResponsePOHeader> createPO(RequestPOHeader request) {
+    public ResponseApi<ResponsePOHeader> createPO(RequestPOHeader request, String currentUserEmail) {
         POHeader poHeader = new POHeader();
+        if (request.getDescription().isBlank()) {
+            throw new MandatoryFieldException("Description cannot be null");
+        }
+        if (request.getItemId() == null) {
+            throw new MandatoryFieldException("ItemId cannot be null");
+        }
+        if (request.getItemQty() == null) {
+            throw new MandatoryFieldException("ItemQty cannot be null");
+        }
+        if (request.getItemCost() == null) {
+            throw new MandatoryFieldException("ItemCost cannot be null");
+        }
+        if (request.getItemPrice() == null) {
+            throw new MandatoryFieldException("ItemPrice cannot be null");
+        }
         poHeader.setDescription(request.getDescription());
-        poHeader.setCreatedBy(request.getCreatedBy());
-        poHeader.setUpdatedBy(request.getUpdatedBy());
+        poHeader.setCreatedBy(currentUserEmail);
 
         POHeader savedHeader = poHeaderRepository.save(poHeader);
 
@@ -134,13 +149,28 @@ public class POHeaderImpl implements POHeaderService {
     }
 
     @Override
-    public ResponseApi<ResponsePOHeader> updatePO(Integer id, RequestPOHeader request) {
+    public ResponseApi<ResponsePOHeader> updatePO(Integer id, RequestPOHeader request, String currentUserEmail) {
         POHeader poHeader = poHeaderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("PO with id " + id + " not found"));
-
+        
+        if (request.getDescription().isBlank()) {
+            throw new MandatoryFieldException("Description cannot be null");
+        }
+        if (request.getItemId() == null) {
+            throw new MandatoryFieldException("ItemId cannot be null");
+        }
+        if (request.getItemQty() == null) {
+            throw new MandatoryFieldException("ItemQty cannot be null");
+        }
+        if (request.getItemCost() == null) {
+            throw new MandatoryFieldException("ItemCost cannot be null");
+        }
+        if (request.getItemPrice() == null) {
+            throw new MandatoryFieldException("ItemPrice cannot be null");
+        }
         // Update field header
         poHeader.setDescription(request.getDescription());
-        poHeader.setUpdatedBy(request.getUpdatedBy());
+        poHeader.setUpdatedBy(currentUserEmail);
 
         // Update detail
         PODetail detail = poHeader.getDetails().get(0);
@@ -190,15 +220,12 @@ public class POHeaderImpl implements POHeaderService {
 
     @Override
     public ResponseApi<Void> deletePODetail(Integer detailId) {
-        // Cari PO Detail berdasarkan id
         PODetail poDetail = poDetailRepository.findById(detailId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                 "PO Detail with id " + detailId + " not found"));
 
-        // Hapus PO Detail
         poDetailRepository.delete(poDetail);
 
-        // Response sukses
         return new ResponseApi<>("00", "PO Detail Deleted Successfully", null);
     }
 }

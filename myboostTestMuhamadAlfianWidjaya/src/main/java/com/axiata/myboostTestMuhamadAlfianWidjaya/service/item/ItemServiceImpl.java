@@ -4,8 +4,10 @@
  */
 package com.axiata.myboostTestMuhamadAlfianWidjaya.service.item;
 
+import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.RequestItem;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseItem;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseApi;
+import com.axiata.myboostTestMuhamadAlfianWidjaya.exception.MandatoryFieldException;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.exception.ResourceNotFoundException;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.model.Item;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.repository.ItemRepository;
@@ -50,6 +52,9 @@ public class ItemServiceImpl implements ItemService {
         if (items.isEmpty()) {
             throw new ResourceNotFoundException("No items found with name " + name);
         }
+        if (name.isBlank()) {
+            throw new MandatoryFieldException("Name cannot be null");
+        }
         List<ResponseItem> responseItems = items.stream()
                 .map(item -> modelMapper.map(item, ResponseItem.class))
                 .toList();
@@ -57,22 +62,47 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ResponseApi<ResponseItem> createItem(ResponseItem itemDto) {
-        Item item = modelMapper.map(itemDto, Item.class);
+    public ResponseApi<ResponseItem> createItem(RequestItem request, String currentUserEmail) {
+        Item item = modelMapper.map(request, Item.class);
+        if (request.getName().isBlank()) {
+            throw new MandatoryFieldException("Name cannot be null");
+        }
+        if (request.getDescription().isBlank()) {
+            throw new MandatoryFieldException("Description cannot be null");
+        }
+        if (request.getPrice() == null) {
+            throw new MandatoryFieldException("Price cannot be null");
+        }
+        if (request.getCost() == null) {
+            throw new MandatoryFieldException("Cost cannot be null");
+        }
+        item.setCreatedBy(currentUserEmail);
         Item saved = itemRepository.save(item);
         return new ResponseApi<>("00", "Item created successfully", modelMapper.map(saved, ResponseItem.class));
     }
 
     @Override
-    public ResponseApi<ResponseItem> updateItem(Integer id, ResponseItem itemDto) {
+    public ResponseApi<ResponseItem> updateItem(Integer id, RequestItem request, String currentUserEmail) {
         Item existing = itemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item not found with id: " + id));
-
-        existing.setName(itemDto.getName());
-        existing.setDescription(itemDto.getDescription());
-        existing.setPrice(itemDto.getPrice());
-        existing.setCost(itemDto.getCost());
-        existing.setUpdatedBy(itemDto.getUpdatedBy());
+        if (request.getName().isBlank()) {
+            throw new MandatoryFieldException("Name cannot be null");
+        }
+        if (request.getDescription().isBlank()) {
+            throw new MandatoryFieldException("Description cannot be null");
+        }
+        if (request.getPrice() == null) {
+            throw new MandatoryFieldException("Price cannot be null");
+        }
+        if (request.getCost() == null) {
+            throw new MandatoryFieldException("Cost cannot be null");
+        }
+        
+        existing.setName(request.getName());
+        existing.setDescription(request.getDescription());
+        existing.setPrice(request.getPrice());
+        existing.setCost(request.getCost());
+        existing.setUpdatedBy(currentUserEmail);
 
         Item updated = itemRepository.save(existing);
         return new ResponseApi<>("00", "Item updated successfully", modelMapper.map(updated, ResponseItem.class));

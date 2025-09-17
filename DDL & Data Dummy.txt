@@ -33,7 +33,7 @@ CREATE TABLE items (
     updated_by VARCHAR(255),
     created_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_datetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_items_created_by FOREIGN KEY (created_by) REFERENCES users(email)
+    CONSTRAINT fk_items_created_by FOREIGN KEY (created_by) REFERENCES users(email) ON DELETE SET NULL
 );
 
 -- 4. Table PO Header (po_h)
@@ -48,7 +48,7 @@ CREATE TABLE po_h (
     updated_by VARCHAR(255),
     created_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_datetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_poh_created_by FOREIGN KEY (created_by) REFERENCES users(email)
+    CONSTRAINT fk_poh_created_by FOREIGN KEY (created_by) REFERENCES users(email) ON DELETE SET NULL
 );
 
 -- 5. Table PO Detail (po_d)

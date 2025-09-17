@@ -19,9 +19,9 @@ public interface POHeaderService {
 
     ResponseApi<ResponsePOHeader> getPOById(Integer id);
 
-    ResponseApi<ResponsePOHeader> createPO(RequestPOHeader request);
+    ResponseApi<ResponsePOHeader> createPO(RequestPOHeader request, String currentUserEmail);
 
-    ResponseApi<ResponsePOHeader> updatePO(Integer id, RequestPOHeader request);
+    ResponseApi<ResponsePOHeader> updatePO(Integer id, RequestPOHeader request, String currentUserEmail);
 
     ResponseApi<Void> deletePO(Integer id);
     

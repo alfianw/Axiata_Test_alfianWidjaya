@@ -8,6 +8,7 @@ import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.RequestPOHeader;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseApi;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponsePOHeader;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.service.POHeader.POHeaderService;
+import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,14 +45,16 @@ public class POHeaderController {
 
     // CREATE PO Header
     @PostMapping
-    public ResponseApi<ResponsePOHeader> createPO(@RequestBody RequestPOHeader request) {
-        return poHeaderService.createPO(request);
+    public ResponseApi<ResponsePOHeader> createPO(@RequestBody RequestPOHeader request, Principal principal) {
+        String currentUserEmail = principal.getName();
+        return poHeaderService.createPO(request, currentUserEmail);
     }
 
     // UPDATE PO Header
     @PutMapping("/{id}")
-    public ResponseApi<ResponsePOHeader> updatePO(@PathVariable Integer id, @RequestBody RequestPOHeader request) {
-        return poHeaderService.updatePO(id, request);
+    public ResponseApi<ResponsePOHeader> updatePO(@PathVariable Integer id, @RequestBody RequestPOHeader request, Principal principal) {
+        String currentUserEmail = principal.getName();
+        return poHeaderService.updatePO(id, request,currentUserEmail);
     }
 
     // DELETE PO Header

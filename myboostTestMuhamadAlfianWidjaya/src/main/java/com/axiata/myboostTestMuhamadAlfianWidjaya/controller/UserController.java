@@ -13,7 +13,6 @@ import com.axiata.myboostTestMuhamadAlfianWidjaya.service.user.UserService;
 import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,8 +52,8 @@ public class UserController {
 
     // PUT update user by id
     @PutMapping("/{id}")
-    public ResponseApi<ResponseUser> updateUser(@PathVariable Integer id, @RequestBody User user, Authentication authentication) {
-        String currentUserEmail = authentication.getName(); 
+    public ResponseApi<ResponseUser> updateUser(@PathVariable Integer id, @RequestBody User user,Principal principal) {
+        String currentUserEmail = principal.getName(); 
         return userService.updateUser(id, user, currentUserEmail);
     }
 

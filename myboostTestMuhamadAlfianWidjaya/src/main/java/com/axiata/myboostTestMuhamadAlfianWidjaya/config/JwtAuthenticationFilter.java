@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (user != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // Principal: you can pass user or a custom UserDetails
             UsernamePasswordAuthenticationToken auth
-                    = new UsernamePasswordAuthenticationToken(user, null, List.of());
+                    = new UsernamePasswordAuthenticationToken(user.getEmail(), null, List.of());
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
 

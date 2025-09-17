@@ -8,6 +8,7 @@ import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.RequestItem;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseItem;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.dto.ResponseApi;
 import com.axiata.myboostTestMuhamadAlfianWidjaya.service.item.ItemService;
+import java.security.Principal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,14 +51,16 @@ public class ItemController {
 
     // CREATE item
     @PostMapping
-    public ResponseApi<ResponseItem> createItem(@RequestBody ResponseItem itemDto) {
-        return itemService.createItem(itemDto);
+    public ResponseApi<ResponseItem> createItem(@RequestBody RequestItem request, Principal principal) {
+        String currentUserEmail = principal.getName();
+        return itemService.createItem(request, currentUserEmail);
     }
 
     // UPDATE item
     @PutMapping("/{id}")
-    public ResponseApi<ResponseItem> updateItem(@PathVariable Integer id, @RequestBody ResponseItem itemDto) {
-        return itemService.updateItem(id, itemDto);
+    public ResponseApi<ResponseItem> updateItem(@PathVariable Integer id, @RequestBody RequestItem request, Principal principal) {
+        String currentUserEmail = principal.getName();
+        return itemService.updateItem(id, request, currentUserEmail);
     }
 
     // DELETE item
